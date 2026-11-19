@@ -193,7 +193,9 @@ def send_mail(to, png_path):
         print("      (未配置 IMA_SMTP_* 环境变量, 跳过邮件发送, 请直接查看 %s)" % png_path)
         return
     msg = MIMEMultipart()
-    msg["Subject"] = "ima 登录二维码 - 请用微信扫码恢复自动签到"
+    repo = os.environ.get("GITHUB_REPOSITORY", "")
+    tag = "A号(ima-qiandao)" if repo.endswith("/ima-qiandao") else ("B号(ima-qiandao-2)" if repo.endswith("/ima-qiandao-2") else (repo or "未知账号"))
+    msg["Subject"] = "【%s】ima 登录二维码 - 请用微信扫码恢复自动签到" % tag
     msg["From"] = user
     msg["To"] = to
     msg.attach(MIMEText("请用微信扫描附件中的二维码并确认登录, 扫码后签到凭证会自动恢复。\n二维码过期后脚本会自动补发新的。", "plain", "utf-8"))
